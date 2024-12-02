@@ -30,21 +30,16 @@ int main(){
   std::sort(v1.begin(), v1.end());
   std::sort(v2.begin(), v2.end());
 
-  {
-    std::vector<int> dist(v1.size());
-    std::transform(v1.begin(), v1.end(), v2.begin(), dist.begin(), [](int const x, int const y){
-      return std::abs(x - y);
-    });
-    std::cout << std::accumulate(dist.begin(), dist.end(), 0) << "\n";
-  }
+  // Distance
+  std::cout << std::transform_reduce(v1.begin(), v1.end(), v2.begin(), 0, std::plus<>(),
+			             [](int const x, int const y){			  
+                                       return std::abs(x-y);}) << std::endl;
 
-  {
-    std::vector<int> sim(v1.size());
-    std::transform(v1.begin(), v1.end(), sim.begin(), [&v2](int const x){
-      return std::count(v2.begin(), v2.end(), x) * x;
-    });
-    std::cout << std::accumulate(sim.begin(), sim.end(), 0) << std::endl;
-  }
+  // Similarity
+  std::cout << std::transform_reduce(v1.begin(), v1.end(), 0, std::plus<>(),
+				     [&v2](int const x){
+				       return std::count(v2.begin(), v2.end(), x) * x;
+				     }) << std::endl;
   
   return 0;
 }
